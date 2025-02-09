@@ -17,14 +17,19 @@ def callback_query(call):
 
     if call.data == "correct":
         bot.answer_callback_query(call.id, "Answer is correct")
+        bot.send_message(call.message.chat.id, "You got 1 point")
         # Задание 9 - добавь очки пользователю за правильный ответ
     elif call.data == "wrong":
         bot.answer_callback_query(call.id,  "Answer is wrong")
-      
+        bot.send_message(call.message.chat.id, "You got 0 points")
     # Задание 5 - реализуй счетчик вопросов
+    user_responses[call.message.chat.id] += 1
 
     # Задание 6 - отправь пользователю сообщение с количеством его набранных очков, если он ответил на все вопросы, а иначе отправь следующий вопрос
-
+    if user_responses[call.message.chat.id]>=len(quiz_questions):
+        bot.send_message(call.message.chat.id, "The end")
+    else:
+        send_question(call.message.chat.id)
 
 @bot.message_handler(commands=['start'])
 def start(message):
